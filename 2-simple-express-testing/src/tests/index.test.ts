@@ -1,6 +1,17 @@
-import {describe, expect, test, it} from '@jest/globals';
+import {describe, expect,jest, it,} from '@jest/globals';
 import request from "supertest";
 import { app } from "../index"
+import { prismaClient } from '../db';
+
+// Mocking the prismaClient-request-create object
+jest.mock("../db",()=>({
+  prismaClient:{sum:{
+    create: jest.fn(),
+    delete: jest.fn(),
+  }}    
+  
+}))
+
 
 describe("POST /sum", () => {
     it("should return the sum of two numbers", async () => {
