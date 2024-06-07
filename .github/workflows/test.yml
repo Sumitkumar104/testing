@@ -1,0 +1,38 @@
+
+# set up CI CD for integeration testing 
+
+name: CI/CD Pipeline
+
+# this workflow will run on every push or pull request to the main branch
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+
+# jobs that will run in the workflow
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2              # simply clone the repo on ubuntu-latest machine that run on github server(azure)
+
+    - name: Set up Docker Buildx             # setup docker buildx for multi-arch builds
+      uses: docker/setup-buildx-action@v2
+
+    - name: Set up Docker Compose
+      uses: docker/setup-qemu-action@v2       # set up the docker  compose for the integration test
+
+    - name: Ensure Docker Compose is available  # check the docker-compose version if docker not installed workflow will break and show error.
+      run: docker-compose version
+
+    - name: Copy .env.example to .env
+      run: cp ./3-integration-testing/.env.example ./3-integration-testing/.env
+
+    - name: Run integration script
+      run: cd 3-integration-testing && npm run test:integration
