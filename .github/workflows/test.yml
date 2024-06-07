@@ -1,5 +1,4 @@
-
-# set up CI CD for integeration testing 
+# set up CI CD for integration testing 
 
 name: CI/CD Pipeline
 
@@ -11,7 +10,6 @@ on:
   pull_request:
     branches:
       - main
-
 
 # jobs that will run in the workflow
 jobs:
@@ -33,6 +31,9 @@ jobs:
 
     - name: Copy .env.example to .env
       run: cp ./3-integration-testing/.env.example ./3-integration-testing/.env
+
+    - name: Grant executable permissions to integration script
+      run: chmod +x ./3-integration-testing/scripts/run-integeration.sh
 
     - name: Run integration script
       run: cd 3-integration-testing && npm run test:integration
